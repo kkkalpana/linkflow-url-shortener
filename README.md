@@ -51,3 +51,43 @@ Create `.env` files in the backend as needed for:
 ## Notes
 
 This application is designed to be a standalone project and can be adapted for your own deployment and branding.
+
+## Deployment
+
+The frontend is deployed on Vercel:
+
+- https://linkflow-url-shortener.vercel.app
+
+The backend is deployed on Render:
+
+- https://linkflow-url-shortener.onrender.com
+- Health check: https://linkflow-url-shortener.onrender.com/api/health
+
+### Vercel
+
+Deploy the `frontend` directory with:
+
+```bash
+npm run build
+```
+
+Use `dist` as the output directory.
+
+### Render
+
+Deploy the `backend` directory as a Node.js Web Service with:
+
+```bash
+Build Command: npm install
+Start Command: npm start
+```
+
+Configure these environment variables on Render:
+
+```text
+NODE_ENV=production
+MONGODB_URI=your MongoDB connection string
+JWT_SECRET=your secure secret
+FRONTEND_URL=https://linkflow-url-shortener.vercel.app
+BASE_URL=https://linkflow-url-shortener.onrender.com
+```
