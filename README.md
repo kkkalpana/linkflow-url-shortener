@@ -43,6 +43,19 @@ npm install
 npm run dev
 ```
 
+### Demo Data
+
+To populate MongoDB with repeatable demo users, shortened URLs, and analytics clicks:
+
+```bash
+cd backend
+npm run seed:demo
+```
+
+The seed creates 8 demo accounts, 48 links, and several hundred clicks. Demo accounts use emails from `demo.01@linkflow.local` through `demo.08@linkflow.local` and the password `DemoPass123!`.
+
+The command replaces only records created by this seed. It requires the `--confirm` flag through the npm script and uses the `MONGODB_URI` from the backend environment.
+
 ## Environment Variables
 
 Create `.env` files in the backend as needed for:
