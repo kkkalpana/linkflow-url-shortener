@@ -11,9 +11,18 @@ jobs:
     steps:
       - name: Ping Backend Health Endpoint
         run: |
-          URL="${{ secrets.BACKEND_HEALTH_URL }}"
+          URL="${{ secrets.BACKEND_HEALTH_URL || 'https://linkflow-url-shortener.onrender.com/api/health' }}"
+          if [ -z "$URL" ]; then
+            echo "BACKEND_HEALTH_URL is not configured."
+            exit 1
+          fi
+
           echo "Sending keep-alive ping to $URL..."
-          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" "$URL")
+          if ! HTTP_RESPONSE=$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 -w "\n%{http_code}" "$URL"); then
+            echo "Keep-alive request failed. Check that BACKEND_HEALTH_URL is a valid URL."
+            exit 1
+          fi
+
           BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
           STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
 
@@ -21,7 +30,8 @@ jobs:
           echo "Response Body: $BODY"
 
           if [ "$STATUS" -ne 200 ]; then
-            echo "⚠️ Warning: Expected status 200 but received $STATUS"
+            echo "Expected status 200 but received $STATUS"
+            exit 1
           else
-            echo "✅ Keep-alive ping successful!"
+            echo "Keep-alive ping successful!"
           fi
