@@ -4,6 +4,11 @@ A full-stack URL shortener built with React, Express, and MongoDB.
 
 This project allows users to shorten links, optionally set custom aliases and expiration dates, and view basic analytics for their links.
 
+## Live Demo
+
+- Frontend: https://linkflow-url-shortener.vercel.app
+- Backend health check: https://linkflow-url-shortener.onrender.com/api/health
+
 ## Features
 
 - Shorten long URLs into cleaner links
@@ -54,14 +59,7 @@ This application is designed to be a standalone project and can be adapted for y
 
 ## Deployment
 
-The frontend is deployed on Vercel:
-
-- https://linkflow-url-shortener.vercel.app
-
-The backend is deployed on Render:
-
-- https://linkflow-url-shortener.onrender.com
-- Health check: https://linkflow-url-shortener.onrender.com/api/health
+The frontend is deployed on Vercel and the backend is deployed on Render.
 
 ### Vercel
 
