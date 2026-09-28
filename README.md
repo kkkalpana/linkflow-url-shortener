@@ -25,6 +25,39 @@ This project allows users to shorten links, optionally set custom aliases and ex
 - Database: MongoDB
 - Cache: Redis
 
+## Architecture
+
+```mermaid
+flowchart LR
+	User --> Frontend[React Frontend<br/>Vercel]
+	Frontend --> API[Express REST API<br/>Render]
+	API --> MongoDB[(MongoDB Atlas)]
+	API --> Redis[(Redis Cache)]
+	API --> Redirect[Redirect Handler]
+	Redirect --> Destination[Original URL]
+```
+
+## Request Flow
+
+1. The frontend sends a long URL to the Express API.
+2. The API validates the URL and generates a unique short code.
+3. MongoDB stores the original URL, ownership, expiration, and click count.
+4. Redis caches active URLs for faster redirects and supports rate limiting.
+5. When a short link is opened, the API records the click and redirects to the original URL.
+
+## Data Model
+
+- `User`: stores email, password hash, display name, and account creation time.
+- `Url`: stores the original URL, short code, custom alias, owner, expiration, status, and click count.
+- `Click`: stores timestamp, referrer, country, browser, operating system, and device information.
+
+## Design Decisions
+
+- JWT authentication keeps protected dashboard requests stateless.
+- Guest users can create short links, while authenticated users can manage their own links and analytics.
+- Redis reduces repeated database lookups and helps protect public endpoints with rate limits.
+- The frontend and backend are deployed separately so each can be built and scaled independently.
+
 ## Local Setup
 
 ### Backend
