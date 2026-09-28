@@ -3,7 +3,10 @@
  * Centralized fetch wrapper with JWT token management
  */
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.DEV
+  ? "/api"
+  : import.meta.env.VITE_API_BASE_URL ||
+    "https://linkflow-url-shortener.onrender.com/api";
 
 /**
  * Get the stored JWT token

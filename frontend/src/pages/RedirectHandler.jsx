@@ -6,11 +6,10 @@ const RedirectHandler = () => {
   const { code } = useParams();
 
   useEffect(() => {
-    const backendUrl =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-        ? "http://localhost:5002"
-        : "https://your-backend-domain.example";
+    const backendUrl = import.meta.env.DEV
+      ? "http://localhost:5002"
+      : import.meta.env.VITE_API_BASE_URL?.replace(/\/api\/?$/, "") ||
+        "https://linkflow-url-shortener.onrender.com";
 
     window.location.replace(`${backendUrl}/${code}`);
   }, [code]);
