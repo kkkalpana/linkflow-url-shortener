@@ -1,0 +1,27 @@
+name: Keep Alive Ping
+
+on:
+  schedule:
+    - cron: "*/14 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Health Endpoint
+        run: |
+          URL="${{ secrets.BACKEND_HEALTH_URL }}"
+          echo "Sending keep-alive ping to $URL..."
+          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" "$URL")
+          BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
+          STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
+
+          echo "Response Status: $STATUS"
+          echo "Response Body: $BODY"
+
+          if [ "$STATUS" -ne 200 ]; then
+            echo "⚠️ Warning: Expected status 200 but received $STATUS"
+          else
+            echo "✅ Keep-alive ping successful!"
+          fi
