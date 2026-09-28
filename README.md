@@ -33,8 +33,15 @@ flowchart LR
 	Frontend --> API[Express REST API<br/>Render]
 	API --> MongoDB[(MongoDB Atlas)]
 	API --> Redis[(Redis Cache)]
-	API --> Redirect[Redirect Handler]
-	Redirect --> Destination[Original URL]
+
+	User --> ShortLink[Open short URL]
+	ShortLink --> Redirect[Redirect Handler]
+	Redirect --> CacheCheck{Redis cache hit?}
+	CacheCheck -->|Yes| Destination[Redirect to original URL]
+	CacheCheck -->|No| MongoLookup[Look up URL in MongoDB Atlas]
+	MongoLookup --> CacheStore[Store result in Redis]
+	CacheStore --> Destination
+	Destination --> Analytics[Record click analytics]
 ```
 
 ## Request Flow
@@ -43,7 +50,8 @@ flowchart LR
 2. The API validates the URL and generates a unique short code.
 3. MongoDB stores the original URL, ownership, expiration, and click count.
 4. Redis caches active URLs for faster redirects and supports rate limiting.
-5. When a short link is opened, the API records the click and redirects to the original URL.
+5. A short-link request checks Redis first; a cache miss queries MongoDB Atlas and repopulates Redis.
+6. The API redirects to the original URL and records click analytics asynchronously.
 
 ## Data Model
 
