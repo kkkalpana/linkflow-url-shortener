@@ -42,3 +42,7 @@ pnpm-debug.log*
 # Local Guides
 PROJECT_GUIDE.md
 .vercel
+
+# Test Coverage
+coverage/
+**/coverage/
